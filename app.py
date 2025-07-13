@@ -14,7 +14,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Apply CSS styling directly
+# Embedded CSS styling - directly in the code
 st.markdown("""
 <style>
 /* Main styling */
@@ -425,31 +425,30 @@ def main():
             st.subheader("Credential Management")
             st.info("Registered institutions can issue and manage academic credentials here")
             
-            if st.checkbox("Show Sample Credential Form"):
-                with st.form("credential_form"):
-                    student_name = st.text_input("Student Full Name")
-                    student_id = st.text_input("Student ID")
-                    degree = st.text_input("Degree Awarded")
-                    major = st.text_input("Major/Field of Study")
-                    issue_date = st.date_input("Issue Date")
-                    gpa = st.number_input("GPA (if applicable)", min_value=0.0, max_value=4.0, step=0.01)
+            with st.form("credential_form"):
+                student_name = st.text_input("Student Full Name")
+                student_id = st.text_input("Student ID")
+                degree = st.text_input("Degree Awarded")
+                major = st.text_input("Major/Field of Study")
+                issue_date = st.date_input("Issue Date")
+                gpa = st.number_input("GPA (if applicable)", min_value=0.0, max_value=4.0, step=0.01)
+                
+                submitted = st.form_submit_button("Issue Credential")
+                
+                if submitted:
+                    # Generate credential ID and blockchain hash
+                    cred_id = f"CRED-{hashlib.sha256((student_name + degree).encode()).hexdigest()[:6].upper()}"
+                    blockchain_hash = generate_blockchain_hash(cred_id)
                     
-                    submitted = st.form_submit_button("Issue Credential")
-                    
-                    if submitted:
-                        # Generate credential ID and blockchain hash
-                        cred_id = f"CRED-{hashlib.sha256((student_name + degree).encode()).hexdigest()[:6].upper()}"
-                        blockchain_hash = generate_blockchain_hash(cred_id)
-                        
-                        st.success("🎓 Credential Issued Successfully!")
-                        st.json({
-                            "Credential ID": cred_id,
-                            "Student Name": student_name,
-                            "Degree": degree,
-                            "Issue Date": issue_date.strftime("%Y-%m-%d"),
-                            "Blockchain Hash": blockchain_hash,
-                            "Verification Status": "Verified"
-                        })
+                    st.success("🎓 Credential Issued Successfully!")
+                    st.json({
+                        "Credential ID": cred_id,
+                        "Student Name": student_name,
+                        "Degree": degree,
+                        "Issue Date": issue_date.strftime("%Y-%m-%d"),
+                        "Blockchain Hash": blockchain_hash,
+                        "Verification Status": "Verified"
+                    })
     
     # Documentation
     elif menu == "Documentation":
@@ -533,7 +532,7 @@ def main():
         📧 Email: support@academicverify.com  
         🌐 Website: [www.academicverify.com](https://www.academicverify.com)  
         📞 Phone: +1 (800) 555-0199  
-        🏢 Headquarters: San Francisco, CA  
+        🏢 Headquarters: Matatiele, Ha Maloto , 4730 
         """)
         
         st.subheader("Join Our Network")
