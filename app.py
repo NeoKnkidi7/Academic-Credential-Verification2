@@ -15,90 +15,89 @@ st.set_page_config(
 )
 
 # Embedded CSS styling
-def embedded_css():
-    css = """
-    <style>
-    /* Main styling */
-    body {
-        background-color: #f0f2f6;
-        color: #333;
-    }
-    .stApp {
-        background: linear-gradient(135deg, #f5f7fa 0%, #e4e7f1 100%);
-    }
-    
-    /* Header styling */
-    .header {
-        background: linear-gradient(135deg, #2c3e50 0%, #1a1a2e 100%);
-        color: white;
-        padding: 1rem;
-        border-radius: 0 0 10px 10px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    
-    /* Card styling */
-    .card {
-        background: white;
-        border-radius: 10px;
-        padding: 1.5rem;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-        margin-bottom: 1rem;
-        border-left: 4px solid #3498db;
-    }
-    
-    /* Button styling */
-    .stButton>button {
-        background: linear-gradient(135deg, #3498db 0%, #1a5d99 100%);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 0.5rem 1rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-    
-    .stButton>button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    
-    /* Sidebar styling */
-    .css-1d391kg {
-        background: linear-gradient(135deg, #2c3e50 0%, #1a1a2e 100%);
-        color: white;
-    }
-    
-    .sidebar .sidebar-content {
-        background: transparent !important;
-    }
-    
-    /* Progress bar */
-    .stProgress > div > div > div {
-        background: linear-gradient(90deg, #3498db 0%, #2ecc71 100%);
-    }
-    
-    /* Custom tabs */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 10px;
-    }
-    
-    .stTabs [data-baseweb="tab"] {
-        background: white;
-        border-radius: 8px 8px 0 0 !important;
-        padding: 10px 20px;
-        transition: all 0.3s ease;
-    }
-    
-    .stTabs [aria-selected="true"] {
-        background: #3498db;
-        color: white;
-    }
-    </style>
-    """
-    st.markdown(css, unsafe_allow_html=True)
+st.markdown("""
+<style>
+/* Main styling */
+body {
+    background-color: #f0f2f6;
+    color: #333;
+}
+.stApp {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e7f1 100%);
+}
 
-# Apply CSS
-embedded_css()
+/* Header styling */
+.header {
+    background: linear-gradient(135deg, #2c3e50 0%, #1a1a2e 100%);
+    color: white;
+    padding: 1rem;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Card styling */
+.card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    margin-bottom: 1rem;
+    border-left: 4px solid #3498db;
+}
+
+/* Button styling */
+.stButton>button {
+    background: linear-gradient(135deg, #3498db 0%, #1a5d99 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.stButton>button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Sidebar styling */
+[data-testid="stSidebar"] {
+    background: linear-gradient(135deg, #2c3e50 0%, #1a1a2e 100%);
+    color: white;
+}
+
+/* Progress bar */
+.stProgress > div > div > div {
+    background: linear-gradient(90deg, #3498db 0%, #2ecc71 100%);
+}
+
+/* Custom tabs */
+.stTabs [data-baseweb="tab-list"] {
+    gap: 10px;
+}
+
+.stTabs [data-baseweb="tab"] {
+    background: white;
+    border-radius: 8px 8px 0 0 !important;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+}
+
+.stTabs [aria-selected="true"] {
+    background: #3498db;
+    color: white;
+}
+
+/* Custom metrics */
+.stMetric {
+    background: white;
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+</style>
+""", unsafe_allow_html=True)
 
 # Generate blockchain-like hash for credentials
 def generate_blockchain_hash(data):
@@ -534,7 +533,7 @@ def main():
         📧 Email: support@academicverify.com  
         🌐 Website: [www.academicverify.com](https://www.academicverify.com)  
         📞 Phone: +1 (800) 555-0199  
-        🏢 Headquarters: Matatiele, Ha Maloto
+        🏢 Headquarters: San Francisco, CA  
         """)
         
         st.subheader("Join Our Network")
