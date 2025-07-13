@@ -14,7 +14,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Embedded CSS styling
+# Apply CSS styling directly
 st.markdown("""
 <style>
 /* Main styling */
