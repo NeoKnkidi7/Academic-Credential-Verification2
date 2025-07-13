@@ -2,14 +2,9 @@ import streamlit as st
 import pandas as pd
 import hashlib
 import datetime
-import base64
 import time
-from PIL import Image
-import matplotlib.pyplot as plt
-import seaborn as sns
-import numpy as np
-import os
 import io
+import matplotlib.pyplot as plt
 
 # Page configuration
 st.set_page_config(
@@ -19,12 +14,97 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for styling
-def local_css(file_name):
-    with open(file_name) as f:
-        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+# Embedded CSS styling
+def embedded_css():
+    css = """
+    <style>
+    /* Main styling */
+    body {
+        background-color: #f0f2f6;
+        color: #333;
+    }
+    .stApp {
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4e7f1 100%);
+    }
+    
+    /* Header styling */
+    .header {
+        background: linear-gradient(135deg, #2c3e50 0%, #1a1a2e 100%);
+        color: white;
+        padding: 1rem;
+        border-radius: 0 0 10px 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    /* Card styling */
+    .card {
+        background: white;
+        border-radius: 10px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        margin-bottom: 1rem;
+        border-left: 4px solid #3498db;
+    }
+    
+    /* Button styling */
+    .stButton>button {
+        background: linear-gradient(135deg, #3498db 0%, #1a5d99 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .stButton>button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    /* Sidebar styling */
+    .css-1d391kg {
+        background: linear-gradient(135deg, #2c3e50 0%, #1a1a2e 100%);
+        color: white;
+    }
+    
+    .sidebar .sidebar-content {
+        background: transparent !important;
+    }
+    
+    /* Progress bar */
+    .stProgress > div > div > div {
+        background: linear-gradient(90deg, #3498db 0%, #2ecc71 100%);
+    }
+    
+    /* Custom tabs */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 10px;
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        background: white;
+        border-radius: 8px 8px 0 0 !important;
+        padding: 10px 20px;
+        transition: all 0.3s ease;
+    }
+    
+    .stTabs [aria-selected="true"] {
+        background: #3498db;
+        color: white;
+    }
+    </style>
+    """
+    st.markdown(css, unsafe_allow_html=True)
 
-local_css("style.css")
+# Apply CSS
+embedded_css()
+
+# Generate blockchain-like hash for credentials
+def generate_blockchain_hash(data):
+    timestamp = str(datetime.datetime.now())
+    data_string = str(data) + timestamp
+    return hashlib.sha256(data_string.encode()).hexdigest()[:12] + "..."
 
 # Sample data for demonstration
 def generate_sample_data():
@@ -42,23 +122,19 @@ def generate_sample_data():
         'Degree': ['BSc Computer Science', 'PhD Physics', 'MBA'],
         'Issue Date': ['2020-06-15', '2018-12-10', '2021-05-20'],
         'Verification Status': ['Verified', 'Verified', 'Pending'],
-        'Blockchain Hash': ['a1b2c3...', 'd4e5f6...', 'x7y8z9...']
+        'Blockchain Hash': [generate_blockchain_hash("CRED-001"), 
+                            generate_blockchain_hash("CRED-002"), 
+                            generate_blockchain_hash("CRED-003")]
     })
     
     return institutions, credentials
-
-# Generate blockchain-like hash for credentials
-def generate_blockchain_hash(data):
-    timestamp = str(datetime.datetime.now())
-    data_string = str(data) + timestamp
-    return hashlib.sha256(data_string.encode()).hexdigest()[:12] + "..."
 
 # Verification status visualization
 def plot_verification_status(df):
     status_counts = df['Verification Status'].value_counts()
     
     fig, ax = plt.subplots(figsize=(6, 3))
-    colors = ['#4CAF50' if status == 'Verified' else '#FFC107' if status == 'Pending' else '#F44336' for status in status_counts.index]
+    colors = ['#2ecc71' if status == 'Verified' else '#f39c12' if status == 'Pending' else '#e74c3c' for status in status_counts.index]
     ax.barh(status_counts.index, status_counts.values, color=colors)
     ax.set_xlabel('Count')
     ax.set_title('Verification Status Distribution')
@@ -72,9 +148,11 @@ def main():
     
     # Sidebar with logo and navigation
     with st.sidebar:
+        st.markdown('<div class="header">', unsafe_allow_html=True)
         st.image("https://cdn-icons-png.flaticon.com/512/2232/2232688.png", width=80)
         st.title("Academic Credential Verification")
         st.subheader("Secure • Trusted • Global")
+        st.markdown('</div>', unsafe_allow_html=True)
         
         menu = st.selectbox("Navigation", ["Dashboard", "Verify Credential", "Institution Portal", "Documentation", "About"])
         st.markdown("---")
@@ -96,9 +174,9 @@ def main():
         
         # Stats cards
         col1, col2, col3 = st.columns(3)
-        col1.metric("Total Credentials Verified", "1,842", "12% increase")
-        col2.metric("Active Institutions", "127", "3 new")
-        col3.metric("Verification Success Rate", "98.7%", "0.3% improvement")
+        col1.markdown('<div class="card"><h3>Total Credentials Verified</h3><h1>1,842</h1><p>12% increase</p></div>', unsafe_allow_html=True)
+        col2.markdown('<div class="card"><h3>Active Institutions</h3><h1>127</h1><p>3 new</p></div>', unsafe_allow_html=True)
+        col3.markdown('<div class="card"><h3>Verification Success Rate</h3><h1>98.7%</h1><p>0.3% improvement</p></div>', unsafe_allow_html=True)
         
         st.markdown("---")
         
@@ -155,9 +233,9 @@ def main():
             st.pyplot(plot_verification_status(credentials))
             
             st.subheader("Security Alerts")
-            st.success("✅ All systems operational")
-            st.info("ℹ️ 3 pending verifications")
-            st.warning("⚠️ 1 document requires additional review")
+            st.markdown('<div class="card"><p>✅ All systems operational</p></div>', unsafe_allow_html=True)
+            st.markdown('<div class="card"><p>ℹ️ 3 pending verifications</p></div>', unsafe_allow_html=True)
+            st.markdown('<div class="card"><p>⚠️ 1 document requires additional review</p></div>', unsafe_allow_html=True)
             
             st.subheader("Quick Actions")
             if st.button("🔍 Start New Verification", use_container_width=True):
@@ -186,19 +264,22 @@ def main():
             
             if uploaded_file is not None:
                 # Display document preview
-                if uploaded_file.type == "application/pdf":
-                    st.image("https://cdn-icons-png.flaticon.com/512/337/337946.png", width=100)
-                    st.caption("PDF document uploaded")
-                else:
-                    st.image(uploaded_file, width=300)
+                col1, col2 = st.columns([1, 2])
+                with col1:
+                    if uploaded_file.type == "application/pdf":
+                        st.image("https://cdn-icons-png.flaticon.com/512/337/337946.png", width=100)
+                        st.caption("PDF document uploaded")
+                    else:
+                        st.image(uploaded_file, width=200)
                 
                 # Extract metadata
-                file_details = {
-                    "File Name": uploaded_file.name,
-                    "File Type": uploaded_file.type,
-                    "File Size": f"{uploaded_file.size / 1024:.2f} KB"
-                }
-                st.json(file_details)
+                with col2:
+                    file_details = {
+                        "File Name": uploaded_file.name,
+                        "File Type": uploaded_file.type,
+                        "File Size": f"{uploaded_file.size / 1024:.2f} KB"
+                    }
+                    st.json(file_details)
                 
                 # Verification process
                 st.subheader("Verification Process")
@@ -217,7 +298,7 @@ def main():
                 for i, step in enumerate(steps):
                     progress_bar.progress((i + 1) / len(steps))
                     status_text.info(f"⏳ {step}")
-                    time.sleep(1)
+                    time.sleep(0.5)
                 
                 # Verification result
                 progress_bar.empty()
@@ -243,21 +324,40 @@ def main():
                         "Security Seal": "Valid"
                     }
                     
-                    col1.subheader("Credential Details")
-                    for key, value in verification_data.items():
-                        col1.markdown(f"**{key}**: {value}")
+                    with col1:
+                        st.subheader("Credential Details")
+                        for key, value in verification_data.items():
+                            st.markdown(f"**{key}**: {value}")
                     
-                    col2.subheader("Security Validation")
-                    col2.image("https://cdn-icons-png.flaticon.com/512/545/545783.png", width=80)
-                    col2.success("Blockchain Verification: Valid")
-                    col2.success("Digital Signature: Valid")
-                    col2.success("Document Integrity: Valid")
+                    with col2:
+                        st.subheader("Security Validation")
+                        st.image("https://cdn-icons-png.flaticon.com/512/545/545783.png", width=80)
+                        st.success("Blockchain Verification: Valid")
+                        st.success("Digital Signature: Valid")
+                        st.success("Document Integrity: Valid")
+                        
+                        # Generate a sample certificate
+                        certificate = f"""
+                        <div style="border:2px solid #3498db; border-radius:10px; padding:20px; background:#f8f9fa;">
+                            <h2 style="color:#2c3e50; text-align:center;">ACADEMIC CREDENTIAL VERIFICATION</h2>
+                            <hr>
+                            <p>This document certifies that the academic credential presented by <strong>{verification_data['Student Name']}</strong>
+                            from <strong>{verification_data['Institution']}</strong> has been successfully verified.</p>
+                            <p><strong>Degree:</strong> {verification_data['Degree']}</p>
+                            <p><strong>Verification ID:</strong> {verification_data['Blockchain Hash']}</p>
+                            <p><strong>Date Verified:</strong> {verification_data['Verification Date']}</p>
+                            <div style="text-align:center; margin-top:20px;">
+                                <img src="https://cdn-icons-png.flaticon.com/512/545/545783.png" width="80">
+                            </div>
+                        </div>
+                        """
+                        st.markdown(certificate, unsafe_allow_html=True)
                     
                     st.download_button(
                         label="📄 Download Verification Certificate",
-                        data=io.BytesIO(b"Sample verification certificate content"),
-                        file_name="verification_certificate.pdf",
-                        mime="application/pdf"
+                        data=io.BytesIO(certificate.encode()),
+                        file_name="verification_certificate.html",
+                        mime="text/html"
                     )
         
         with tab2:
@@ -417,9 +517,9 @@ def main():
         
         st.subheader("Our Technology")
         col1, col2, col3 = st.columns(3)
-        col1.metric("Blockchain Nodes", "24", "Globally distributed")
-        col2.metric("Verified Institutions", "127", "Across 35 countries")
-        col3.metric("Credentials Verified", "18,429", "Since 2020")
+        col1.markdown('<div class="card"><h3>Blockchain Nodes</h3><h1>24</h1><p>Globally distributed</p></div>', unsafe_allow_html=True)
+        col2.markdown('<div class="card"><h3>Verified Institutions</h3><h1>127</h1><p>Across 35 countries</p></div>', unsafe_allow_html=True)
+        col3.markdown('<div class="card"><h3>Credentials Verified</h3><h1>18,429</h1><p>Since 2020</p></div>', unsafe_allow_html=True)
         
         st.subheader("Security Certifications")
         st.markdown("""
@@ -434,7 +534,7 @@ def main():
         📧 Email: support@academicverify.com  
         🌐 Website: [www.academicverify.com](https://www.academicverify.com)  
         📞 Phone: +1 (800) 555-0199  
-        🏢 Headquarters: San Francisco, CA  
+        🏢 Headquarters: Matatiele, Ha Maloto
         """)
         
         st.subheader("Join Our Network")
